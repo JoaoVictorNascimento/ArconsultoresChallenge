@@ -2,9 +2,18 @@ const express = require('express');
 const cors = require('cors');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
-app.use(cors());
+// Configuração do CORS
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 let transactions = [];
@@ -54,6 +63,22 @@ app.post('/api/transactions', (req, res) => {
   }
 });
 
+// Rota GET - Buscar todas as transações
+app.get('/api/transactions', (req, res) => {
+  try {
+    res.status(200).json({
+      total: transactions.length,
+      transactions: transactions
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      error: 'Internal server error',
+      details: error.message 
+    });
+  }
+});
+
+// Rota GET - Buscar uma transação específica por ID
 app.get('/api/transactions/:id', (req, res) => {
   try {
     const { id } = req.params;
@@ -74,8 +99,43 @@ app.get('/api/transactions/:id', (req, res) => {
   }
 });
 
+// Rota DELETE - Deletar uma transação
+app.delete('/api/transactions/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const index = transactions.findIndex(t => t.id === parseInt(id));
+
+    if (index === -1) {
+      return res.status(404).json({ 
+        error: 'Transaction not found' 
+      });
+    }
+
+    const deletedTransaction = transactions.splice(index, 1)[0];
+
+    res.status(200).json({
+      message: 'Transaction deleted successfully',
+      transaction: deletedTransaction
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      error: 'Internal server error',
+      details: error.message 
+    });
+  }
+});
+
+// Rota de health check
+app.get('/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'OK',
+    message: 'Server is running' 
+  });
+});
+
 // Iniciar o servidor
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on http://localhost:${PORT}`);
   console.log(`📊 Transactions API available at http://localhost:${PORT}/api/transactions`);
+  console.log(`✅ CORS enabled for http://localhost:3000`);
 });
