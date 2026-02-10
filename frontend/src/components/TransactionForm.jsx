@@ -15,13 +15,13 @@ import {
 } from "./ui/form";
 
 const transactionSchema = z.object({
-  valor: z
+  value: z
     .string()
     .min(1, "Value is required")
     .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
       message: "Value must be a positive number",
     }),
-  descricao: z
+  description: z
     .string()
     .min(1, "Description is required")
     .min(3, "Description must be at least 3 characters long"),
@@ -31,8 +31,8 @@ const TransactionForm = () => {
   const form = useForm({
     resolver: zodResolver(transactionSchema),
     defaultValues: {
-      valor: "",
-      descricao: "",
+      value: "",
+      description: "",
     },
   });
 
