@@ -13,8 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
-
-const API_URL = "http://localhost:5001/api/transactions";
+import { API_ENDPOINTS } from "../config/api";
 
 const transactionSchema = z.object({
   value: z
@@ -44,7 +43,7 @@ const TransactionForm = () => {
     setIsLoading(true);
 
     try {
-      const postResponse = await fetch(API_URL, {
+      const postResponse = await fetch(API_ENDPOINTS.transactions, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -65,7 +64,7 @@ const TransactionForm = () => {
 
       console.log("Transaction created:", postData);
 
-      const getResponse = await fetch(`${API_URL}/${transactionId}`);
+      const getResponse = await fetch(`${API_ENDPOINTS.transactions}/${transactionId}`);
 
       if (!getResponse.ok) {
         throw new Error("Failed to fetch transaction");
