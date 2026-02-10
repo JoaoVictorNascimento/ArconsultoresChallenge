@@ -62,8 +62,6 @@ const TransactionForm = () => {
       const postData = await postResponse.json();
       const transactionId = postData.transaction.id;
 
-      console.log("Transaction created:", postData);
-
       const getResponse = await fetch(`${API_ENDPOINTS.transactions}/${transactionId}`);
 
       if (!getResponse.ok) {
@@ -71,8 +69,6 @@ const TransactionForm = () => {
       }
 
       const transactionData = await getResponse.json();
-
-      console.log("Transaction fetched:", transactionData);
 
       const formattedDate = new Date(transactionData.createdAt).toLocaleString('pt-BR');
       
@@ -86,7 +82,6 @@ const TransactionForm = () => {
 
       form.reset();
     } catch (error) {
-      console.error("Error:", error);
       alert(`Error: ${error.message}`);
     } finally {
       setIsLoading(false);
