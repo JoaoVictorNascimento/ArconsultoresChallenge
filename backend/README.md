@@ -1,35 +1,35 @@
 # Backend - Transactions API
 
-Backend criado com Node.js e Express para gerenciar transações.
+Backend built with Node.js and Express to manage transactions.
 
-## Instalação
+## Installation
 
 ```bash
 npm install
 ```
 
-## Executar
+## Running
 
-### Modo de desenvolvimento (com auto-reload)
+### Development mode (with auto-reload)
 ```bash
 npm run dev
 ```
 
-### Modo de produção
+### Production mode
 ```bash
 npm start
 ```
 
-O servidor irá iniciar em `http://localhost:5000`
+The server will start on `http://localhost:5001`
 
-## Rotas da API
+## API Routes
 
 ### 1. Health Check
 ```
 GET /health
 ```
 
-Resposta:
+Response:
 ```json
 {
   "status": "OK",
@@ -37,7 +37,7 @@ Resposta:
 }
 ```
 
-### 2. Criar uma transação
+### 2. Create a transaction
 ```
 POST /api/transactions
 ```
@@ -46,29 +46,29 @@ Body:
 ```json
 {
   "value": 100.50,
-  "description": "Descrição da transação"
+  "description": "Transaction description"
 }
 ```
 
-Resposta de sucesso (201):
+Success response (201):
 ```json
 {
   "message": "Transaction created successfully",
   "transaction": {
     "id": 1,
     "value": 100.50,
-    "description": "Descrição da transação",
+    "description": "Transaction description",
     "createdAt": "2024-01-01T12:00:00.000Z"
   }
 }
 ```
 
-### 3. Buscar todas as transações
+### 3. Get all transactions
 ```
 GET /api/transactions
 ```
 
-Resposta:
+Response:
 ```json
 {
   "total": 2,
@@ -76,57 +76,57 @@ Resposta:
     {
       "id": 1,
       "value": 100.50,
-      "description": "Descrição da transação",
+      "description": "Transaction description",
       "createdAt": "2024-01-01T12:00:00.000Z"
     },
     {
       "id": 2,
       "value": 250.00,
-      "description": "Outra transação",
+      "description": "Another transaction",
       "createdAt": "2024-01-01T12:05:00.000Z"
     }
   ]
 }
 ```
 
-### 4. Buscar uma transação específica
+### 4. Get a specific transaction
 ```
 GET /api/transactions/:id
 ```
 
-Resposta:
+Response:
 ```json
 {
   "id": 1,
   "value": 100.50,
-  "description": "Descrição da transação",
+  "description": "Transaction description",
   "createdAt": "2024-01-01T12:00:00.000Z"
 }
 ```
 
-### 5. Deletar uma transação
+### 5. Delete a transaction
 ```
 DELETE /api/transactions/:id
 ```
 
-Resposta:
+Response:
 ```json
 {
   "message": "Transaction deleted successfully",
   "transaction": {
     "id": 1,
     "value": 100.50,
-    "description": "Descrição da transação",
+    "description": "Transaction description",
     "createdAt": "2024-01-01T12:00:00.000Z"
   }
 }
 ```
 
-## Validações
+## Validations
 
-- **value**: Obrigatório e deve ser um número
-- **description**: Obrigatório e não pode ser vazio
+- **value**: Required and must be a number
+- **description**: Required and cannot be empty
 
-## Armazenamento
+## Storage
 
-Os dados são armazenados em memória (array). Quando o servidor reinicia, todos os dados são perdidos.
+Data is stored in memory (array). When the server restarts, all data is lost.
