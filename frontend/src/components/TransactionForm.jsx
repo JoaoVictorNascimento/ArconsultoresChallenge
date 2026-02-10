@@ -88,9 +88,8 @@ const TransactionForm = () => {
             )}
           />
 
-          {/* Botão de Submit */}
           <Button type="submit" className="w-full">
-            Adicionar Transação
+            Submit
           </Button>
         </form>
       </Form>
