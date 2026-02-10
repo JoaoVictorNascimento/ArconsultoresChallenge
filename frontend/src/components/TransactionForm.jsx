@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
@@ -13,20 +12,8 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
-import { API_ENDPOINTS } from "../config/api";
-
-const transactionSchema = z.object({
-  value: z
-    .string()
-    .min(1, "Value is required")
-    .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-      message: "Value must be a positive number",
-    }),
-  description: z
-    .string()
-    .min(1, "Description is required")
-    .min(3, "Description must be at least 3 characters long"),
-});
+import { transactionSchema } from "../schemas/transactionSchema";
+import { createTransaction, getTransactionById } from "../services/transactionService";
 
 const TransactionForm = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -43,34 +30,16 @@ const TransactionForm = () => {
     setIsLoading(true);
 
     try {
-      const postResponse = await fetch(API_ENDPOINTS.transactions, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          value: Number(data.value),
-          description: data.description,
-        }),
+      const postData = await createTransaction({
+        value: Number(data.value),
+        description: data.description,
       });
 
-      if (!postResponse.ok) {
-        const errorData = await postResponse.json();
-        throw new Error(errorData.error || "Failed to create transaction");
-      }
-
-      const postData = await postResponse.json();
       const transactionId = postData.transaction.id;
 
-      const getResponse = await fetch(`${API_ENDPOINTS.transactions}/${transactionId}`);
+      const transactionData = await getTransactionById(transactionId);
 
-      if (!getResponse.ok) {
-        throw new Error("Failed to fetch transaction");
-      }
-
-      const transactionData = await getResponse.json();
-
-      const formattedDate = new Date(transactionData.createdAt).toLocaleString('pt-BR');
+      const formattedDate = new Date(transactionData.createdAt).toLocaleString('en-US');
       
       alert(
         `Transaction Created Successfully!\n\n` +
